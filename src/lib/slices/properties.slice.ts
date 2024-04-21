@@ -33,3 +33,6 @@ export const propertiesSlice = createSlice({
 
 export const selectArePropertiesLoading = (state: RootState) =>
   state.properties.loading;
+
+export const selectProperties = (state: RootState) =>
+  propertiesAdapter.getSelectors().selectAll(state.properties);
