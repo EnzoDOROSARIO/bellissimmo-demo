@@ -36,3 +36,8 @@ export const selectArePropertiesLoading = (state: RootState) =>
 
 export const selectProperties = (state: RootState) =>
   propertiesAdapter.getSelectors().selectAll(state.properties);
+export const selectFavorites = (state: RootState) =>
+  propertiesAdapter
+    .getSelectors()
+    .selectAll(state.properties)
+    .filter((p) => p.isFavorite);

@@ -13,8 +13,8 @@ const createTestPropertiesViewModel =
   (rootState: RootState) =>
     createPropertiesViewModel({ dispatch })(rootState);
 
-describe("Properties view mode", () => {
-  test("it should return a loading state when properties are loadin", () => {
+describe("Properties view model", () => {
+  test("it should return a loading state when properties are loading", () => {
     const state = stateBuilder().withPropertiesLoading(undefined).build();
 
     const viewModel = createTestPropertiesViewModel({})(state);
