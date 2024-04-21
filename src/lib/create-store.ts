@@ -1,7 +1,16 @@
-import { ThunkDispatch, UnknownAction, configureStore } from "@reduxjs/toolkit";
+import {
+  AsyncThunk,
+  Middleware,
+  ThunkDispatch,
+  UnknownAction,
+  configureStore,
+  isAsyncThunkAction,
+} from "@reduxjs/toolkit";
 import { rootReducer } from "./root-reducer";
 import { PropertyGateway } from "./ports/property-gateway.port";
 import { FakePropertyGateway } from "./infra/fake-property-gateway";
+
+export const EMPTY_ARGS = "EMPTY_ARGS" as const;
 
 export type Dependencies = {
   propertyGateway: PropertyGateway;
@@ -11,6 +20,12 @@ export const createStore = (
   dependencies: Dependencies,
   preloadedState?: Partial<RootState>,
 ) => {
+  const actions: UnknownAction[] = [];
+  const logActionsMiddleware: Middleware = () => (next) => (action) => {
+    actions.push(action as UnknownAction);
+    return next(action);
+  };
+
   const store = configureStore({
     reducer: rootReducer,
     middleware(getDefaultMiddleware) {
@@ -18,12 +33,17 @@ export const createStore = (
         thunk: {
           extraArgument: dependencies,
         },
-      });
+      }).prepend(logActionsMiddleware);
     },
     preloadedState,
   });
 
-  return { ...store };
+  return {
+    ...store,
+    getActions() {
+      return actions;
+    },
+  };
 };
 
 export const createTestStore = (
@@ -37,7 +57,20 @@ export const createTestStore = (
     preloadedState,
   );
 
-  return { ...store };
+  return {
+    ...store,
+    getDispatchedUseCaseArgs(useCase: AsyncThunk<any, any, any>) {
+      const pendingUseCaseAction = store
+        .getActions()
+        .find((a) => a.type === useCase.pending.toString());
+
+      if (!pendingUseCaseAction) return;
+
+      if (!isAsyncThunkAction(pendingUseCaseAction)) return;
+
+      return pendingUseCaseAction.meta.arg ?? EMPTY_ARGS;
+    },
+  };
 };
 
 type AppStoreWithGetActions = ReturnType<typeof createStore>;

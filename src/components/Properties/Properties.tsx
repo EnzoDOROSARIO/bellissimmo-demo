@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   PropertiesViewModelType,
   createPropertiesViewModel,
@@ -15,7 +15,8 @@ import { Button } from "../ui/button";
 import { Property } from "@/lib/models/property.entity";
 
 export const Properties = () => {
-  const viewModel = useSelector(createPropertiesViewModel());
+  const dispatch = useDispatch();
+  const viewModel = useSelector(createPropertiesViewModel({ dispatch }));
 
   if (viewModel.type === PropertiesViewModelType.PropertiesLoading) {
     return <div>Loading...</div>;
@@ -24,13 +25,22 @@ export const Properties = () => {
   return (
     <div className="grid grid-cols-3 gap-4">
       {viewModel.properties.map((property) => (
-        <PropertyCard property={property} />
+        <PropertyCard
+          property={property}
+          onAddToFavoriteClick={viewModel.handleAddToFavorites}
+        />
       ))}
     </div>
   );
 };
 
-export const PropertyCard = ({ property }: { property: Property }) => (
+export const PropertyCard = ({
+  property,
+  onAddToFavoriteClick,
+}: {
+  property: Property;
+  onAddToFavoriteClick: (p: Property) => any;
+}) => (
   <Card key={property.id}>
     <CardHeader>
       <CardTitle>
@@ -42,7 +52,16 @@ export const PropertyCard = ({ property }: { property: Property }) => (
       <img src={property.pictureUrl} />
     </CardContent>
     <CardFooter>
-      <Button className="w-full">Ajouter aux favoris</Button>
+      {property.isFavorite ? (
+        <Button className="w-full">Retirer des favoris</Button>
+      ) : (
+        <Button
+          onClick={() => onAddToFavoriteClick(property)}
+          className="w-full"
+        >
+          Ajouter aux favoris
+        </Button>
+      )}
     </CardFooter>
   </Card>
 );
