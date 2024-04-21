@@ -6,6 +6,7 @@ export type Property = {
   description: string;
   price: string;
   pictureUrl: string;
+  isFavorite: boolean;
 };
 
 export const propertiesAdapter = createEntityAdapter<Property>();

@@ -2,6 +2,7 @@ import { EntityState, createSlice } from "@reduxjs/toolkit";
 import { Property, propertiesAdapter } from "../models/property.entity";
 import { getProperties } from "../usecases/get-properties.usecase";
 import { RootState } from "../create-store";
+import { addToFavorites } from "../usecases/add-to-favorites.usecase";
 
 type PropertiesSliceState = EntityState<Property, Property["id"]> & {
   loading: boolean;
@@ -20,6 +21,12 @@ export const propertiesSlice = createSlice({
     builder.addCase(getProperties.fulfilled, (state, action) => {
       state.loading = false;
       propertiesAdapter.addMany(state, action.payload);
+    });
+    builder.addCase(addToFavorites.fulfilled, (state, action) => {
+      propertiesAdapter.updateOne(state, {
+        id: action.payload.id,
+        changes: action.payload,
+      });
     });
   },
 });
