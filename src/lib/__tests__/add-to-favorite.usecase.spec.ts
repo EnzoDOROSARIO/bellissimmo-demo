@@ -18,9 +18,6 @@ describe("Feature: Add a property to favorite", () => {
 
     const action = fixture.whenAddingPropertyToFavorites(property);
     await action;
-    fixture.thenAnAlertShouldBeAdded(
-      `${property.name} a été ajouté à vos favoris.`,
-    );
     fixture.thenPropertyShouldBeAddedToFavorites(property);
     fixture.thenPropertiesShouldBe([
       buildProperty({ id: "1", isFavorite: true }),

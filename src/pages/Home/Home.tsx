@@ -1,3 +1,4 @@
+import { Alerts } from "@/components/Alerts/Alerts";
 import { Favorites } from "@/components/Favorites/Favorites";
 import { Properties } from "@/components/Properties/Properties";
 
@@ -15,6 +16,7 @@ export const Home = () => {
           <Properties />
         </div>
       </div>
+      <Alerts />
     </>
   );
 };
