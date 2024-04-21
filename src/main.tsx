@@ -1,10 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
 import "./index.d.ts";
+import { Provider } from "./Provider.tsx";
+import { FakePropertyGateway } from "./lib/infra/fake-property-gateway.ts";
+import { createStore } from "./lib/create-store.ts";
+import { createRouter } from "./router.tsx";
+import { properties } from "./lib/fake-data.ts";
+
+const fakePropertiesGateway = new FakePropertyGateway();
+fakePropertiesGateway.properties = properties;
+
+const store = createStore({
+  propertyGateway: fakePropertiesGateway,
+});
+
+const router = createRouter({
+  store,
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <Provider store={store} router={router} />
   </React.StrictMode>,
 );

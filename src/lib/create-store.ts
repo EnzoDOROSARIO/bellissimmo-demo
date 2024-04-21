@@ -9,7 +9,7 @@ export type Dependencies = {
 
 export const createStore = (
   dependencies: Dependencies,
-  preloadedState: Partial<RootState>,
+  preloadedState?: Partial<RootState>,
 ) => {
   const store = configureStore({
     reducer: rootReducer,
