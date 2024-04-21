@@ -6,8 +6,10 @@ import {
 import { Property, propertiesAdapter } from "./models/property.entity";
 import { rootReducer } from "./root-reducer";
 import { RootState } from "./create-store";
+import { Alert, alertsAdapter } from "./models/alert.entity";
 
 const withProperties = createAction<Property[]>("withProperties");
+const withAlerts = createAction<Alert[]>("withAlerts");
 const withPropertiesLoading = createAction("withPropertiesLoading");
 const withPropertiesNotLoading = createAction("withPropertiesNotLoading");
 
@@ -17,6 +19,9 @@ const reducer = createReducer(initialState, (builder) => {
   builder
     .addCase(withProperties, (state, action) => {
       propertiesAdapter.upsertMany(state.properties, action.payload);
+    })
+    .addCase(withAlerts, (state, action) => {
+      alertsAdapter.upsertMany(state.alerts, action.payload);
     })
     .addCase(withPropertiesLoading, (state) => {
       state.properties.loading = true;
@@ -35,6 +40,7 @@ export const stateBuilder = (baseState = initialState) => {
 
   return {
     withProperties: reduce(withProperties),
+    withAlerts: reduce(withAlerts),
     withPropertiesLoading: reduce(withPropertiesLoading),
     withPropertiesNotLoading: reduce(withPropertiesNotLoading),
     build(): RootState {

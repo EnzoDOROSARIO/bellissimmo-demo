@@ -42,13 +42,20 @@ export const createPropertyFixture = (
       const arePropertiesLoading = selectArePropertiesLoading(store.getState());
       expect(arePropertiesLoading).toBe(true);
     },
+    thenAnAlertShouldBeAdded(message: string) {
+      const expectedState = stateBuilder(testStateBuilderProvider.getState())
+        .withAlerts([{ id: "0", message }])
+        .build();
+
+      expect(expectedState.alerts).toEqual(store.getState().alerts);
+    },
     thenPropertiesShouldBe(expectedProperties: Property[]) {
       const expectedState = stateBuilder(testStateBuilderProvider.getState())
         .withPropertiesNotLoading(undefined)
         .withProperties(expectedProperties)
         .build();
 
-      expect(store.getState()).toEqual(expectedState);
+      expect(expectedState.properties).toEqual(store.getState().properties);
     },
   };
 };
