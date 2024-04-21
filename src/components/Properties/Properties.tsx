@@ -17,6 +17,7 @@ export const Properties = () => {
     <div className="grid grid-cols-3 gap-4">
       {viewModel.properties.map((property) => (
         <PropertyCard
+          key={property.id}
           property={property}
           onAddToFavoriteClick={viewModel.handleAddToFavorites}
         />

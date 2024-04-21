@@ -5,10 +5,20 @@ export class FakePropertyGateway implements PropertyGateway {
   lastPropertyAddedToFavorites?: Property;
   properties: Property[] = [];
 
-  async getProperties(): Promise<Property[]> {
-    return this.properties;
+  constructor(private timeoutInMs: number = 0) {}
+
+  getProperties(): Promise<Property[]> {
+    return new Promise((resolve) =>
+      setTimeout(() => resolve(this.properties), this.timeoutInMs),
+    );
   }
-  async addToFavorites(property: Property): Promise<void> {
-    this.lastPropertyAddedToFavorites = property;
+
+  addToFavorites(property: Property): Promise<void> {
+    return new Promise((resolve) =>
+      setTimeout(() => {
+        this.lastPropertyAddedToFavorites = property;
+        return resolve();
+      }, this.timeoutInMs),
+    );
   }
 }

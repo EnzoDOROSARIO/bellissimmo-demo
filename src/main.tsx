@@ -7,7 +7,7 @@ import { createStore } from "./lib/create-store.ts";
 import { createRouter } from "./router.tsx";
 import { properties } from "./lib/fake-data.ts";
 
-const fakePropertiesGateway = new FakePropertyGateway();
+const fakePropertiesGateway = new FakePropertyGateway(500);
 fakePropertiesGateway.properties = properties;
 
 const store = createStore({
